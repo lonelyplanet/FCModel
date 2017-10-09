@@ -163,6 +163,10 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
         // Not in memory yet. Check DB.
         instance = fieldValues ? [[self alloc] initWithFieldValues:fieldValues existsInDatabaseAlready:YES] : [self instanceFromDatabaseWithPrimaryKey:primaryKeyValue];
         if (! instance && create) {
+            if (!g_primaryKeyFieldName[self]) {
+                return nil;
+            }
+            
             // Create new with this key.
             instance = [[self alloc] initWithFieldValues:@{ g_primaryKeyFieldName[self] : primaryKeyValue } existsInDatabaseAlready:NO];
         }
