@@ -741,8 +741,9 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
 + (instancetype)new  { return [[self alloc] initWithFieldValues:@{} existsInDatabaseAlready:NO]; }
 - (instancetype)init { return [self initWithFieldValues:@{} existsInDatabaseAlready:NO]; }
 
-- (instancetype)initWithFieldValues:(NSDictionary *)fieldValues existsInDatabaseAlready:(BOOL)existsInDB
-{
+- (instancetype)initWithFieldValues:(NSDictionary *)fieldValues existsInDatabaseAlready:(BOOL)existsInDB {
+    NSParameterAssert(fieldValues);
+
     if ( (self = [super init]) ) {
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(reload:) name:FCModelReloadNotification object:self.class];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(saveByNotification:) name:FCModelSaveNotification object:self.class];
@@ -1359,9 +1360,9 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
 
     [g_databaseQueue close];
     g_databaseQueue = nil;
-    g_primaryKeyFieldName = nil;
-    g_fieldInfo = nil;
-    g_ignoredFieldNames = nil;
+    g_primaryKeyFieldName = @{};
+    g_fieldInfo = @{};
+    g_ignoredFieldNames = @{};
     g_tablesUsingAutoIncrementEmulation = nil;
     
     return ! modelsAreStillLoaded;
